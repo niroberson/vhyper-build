@@ -2,7 +2,16 @@ Visual C++ Redistributable for Visual Studio 2015 is required to run this
 application. So, if you receive the error `pyi_rth_qt5plugins returned -1`
 trying to run the gui, try installing vc_redist.x64.exe and then run it again.
 
-In order to generate a .py file from a .ui file, install PyQt5 and run:
+Contributing
+------------
+
+To contribute you'll need to install:
+- Python 3.4 64-bit from https://www.python.org/
+- PyQt5: https://www.riverbankcomputing.com/software/pyqt/download5
+
+I (Sam) am actually using Python 3.5 and compiled Qt + sip + icu + PyQt from source, but Python 3.4 & 3.5 are mostly compatible and I'll try not to break it.
+
+In order to generate a .py file from a .ui file, run:
 ```
 python -m PyQt5.uic.pyuic input.ui > output.py
 ```
