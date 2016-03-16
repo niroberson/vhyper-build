@@ -27,12 +27,20 @@ def main():
         print('could not open socket')
         sys.exit(1)
     print('Connected to {}'.format(s.getpeername()))
+    # while True:
+    #     data = s.recv(1024)
+    #     if not data:
+    #         break
+    #     print('Received and sending back: "{}"'.format(data.decode()))
+    #     s.send(data)
     while True:
-        data = s.recv(1024)
-        if not data:
+        message = input()
+        if not message:
             break
-        print('Received and sending back: "{}"'.format(data.decode()))
-        s.send(data)
+        s.sendall(message.encode())
+        print('Sent: "{}"'.format(message))
+        data = s.recv(1024)
+        print('Received', repr(data))
     s.close()
 
 if __name__ == '__main__':

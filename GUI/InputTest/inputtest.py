@@ -4,11 +4,11 @@ import inputgui
 import tcpserver
 
 
-class InputTestGui(socketgui.Ui_MainWindow):
+class InputTestGui(inputgui.Ui_MainWindow):
     def __init__(self, MainWindow):
-        super(SocketTestGui, self).__init__()
+        super(InputTestGui, self).__init__()
         self.setupUi(MainWindow)
-        self.plainTextEditFilter = TextEditReturnFilter(tcpSend, updateBrowser)
+        self.plainTextEditFilter = TextEditReturnFilter(self.tcpSend, self.updateBrowser)
         self.plainTextEdit.installEventFilter(self.plainTextEditFilter)
         self.plainTextEdit.setFocus()
 
@@ -22,15 +22,24 @@ class InputTestGui(socketgui.Ui_MainWindow):
                 port = int(self.lineEdit_2.text())
             except ValueError:
                 return
-            self.server = tcpserver.TcpServer(port)
-            addr = self.server.accept()  # blocking
-            self.textBrowser.append('Connected to {}'.format(addr))
+            self.server = tcpserver.TcpServer(self.connectionOpened, self.handleMessage, self.connectionClosed, port)
             self.pushButton_2.setText(_translate("MainWindow", "Close"))
         else:
             self.server.close()
             self.server = None
             self.textBrowser.append('Closed open connection')
-            self.pushButton_2.setText(_translate("MainWindow", "Host"))
+            self.pushButton_2.setText(_translate("MainWindow", "Start Server"))
+
+    def connectionOpened(self, addr):
+        self.textBrowser.append('Connected to {}'.format(addr))
+
+    def handleMessage(self, message):
+        self.textBrowser.append('Received "{}" asynchronously'.format(message))
+
+    def connectionClosed(self):
+        self.textBrowser.append('Connection has been closed somehow')
+        self.server = None
+        self.pushButton_2.setText(QtCore.QCoreApplication.translate("MainWindow", "Start Server"))
 
     def tcpSend(self):
         if self.server:
@@ -52,8 +61,6 @@ class TextEditReturnFilter(QtCore.QObject):
         super(TextEditReturnFilter, self).__init__()
         for func in funcs:
             self.textEditReturn.connect(func)
-        #self.textEditReturn.connect(gui.tcpSend)
-        #self.textEditReturn.connect(gui.updateBrowser)
 
     def eventFilter(self, srcObject, event):
         if event.type() == QtCore.QEvent.KeyPress and event.key() == QtCore.Qt.Key_Return:
