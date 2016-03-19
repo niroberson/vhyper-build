@@ -79,6 +79,10 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 APP_DATA appData;
 
+const char *string1 = "*** Vacuum Compatibility Test One: Chipkit Mx7 ***\r\n";
+const char *string2 = "*** String2 ***\r\n";
+volatile unsigned int delay = 100000;
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: Application Callback Functions
@@ -116,20 +120,9 @@ void APP_Initialize ( void )
 {
     /* Place the App state machine in its initial state. */
     appData.state = APP_STATE_INIT;
-    appData.data = 2;
-}
-
-bool PutCharacter(const char character)
-{
-    /* Check if buffer is empty for a new transmission */
-    if(PLIB_USART_TransmitterIsEmpty(USART_ID_2))
-    {
-        /* Send character */
-        PLIB_USART_TransmitterByteSend(USART_ID_2, character);
-        return true;
-    }
-    else
-        return false;
+    appData.seconds = 0;
+    appData.min = 0;
+    appData.stringIndex = 0;
 }
 
 /******************************************************************************
@@ -149,28 +142,49 @@ void APP_Tasks ( void )
         case APP_STATE_INIT:
         {
             appData.state = APP_STATE_RUN;
+            appData.stringPointer = string1;
+            
             break;
         }
         
         case APP_STATE_RUN:
         {
-            //PLIB_PORTS_PinWrite(PORTS_ID_0, PORT_CHANNEL_G, PORTS_BIT_POS_15, 1);
-            int sum;
-            sum = ExampleFunction(appData.data,3);
-            if(sum == 4){
-                PLIB_PORTS_PinWrite(PORTS_ID_0, PORT_CHANNEL_G, PORTS_BIT_POS_14, 1);
-                PLIB_PORTS_PinWrite(PORTS_ID_0, PORT_CHANNEL_G, PORTS_BIT_POS_13, 0);
-                appData.data = 2;}
-            else if(sum == 5){
-                appData.data = 1;
+            if(true == WriteString())
+            {
+                PLIB_PORTS_PinWrite(PORTS_ID_0, PORT_CHANNEL_G, PORTS_BIT_POS_15, 1);
+                appData.stringPointer = string2;
+                appData.state = APP_STATE_PRINT;
+            }           
+            break;
+        }
+        
+        case APP_STATE_PRINT:
+        {
+            sprintf(appData.buffer, "Minutes: %i, Seconds: %i \n",appData.min,appData.seconds);
+            appData.stringPointer = appData.buffer;
+            
+            if(true == WriteStringTwo())
+            {
                 PLIB_PORTS_PinWrite(PORTS_ID_0, PORT_CHANNEL_G, PORTS_BIT_POS_13, 1);
-                PLIB_PORTS_PinWrite(PORTS_ID_0, PORT_CHANNEL_G, PORTS_BIT_POS_14, 0);}
-     
-            //PutCharacter(appData.data);
-            //PLIB_USART_TransmitterByteSend(USART_ID_1, appData.data);
-            char rx_byte;
-            rx_byte = DRV_USART0_ReadByte ();
-            DRV_USART0_WriteByte(rx_byte);
+                appData.state = APP_STATE_DELAY;
+            }
+          
+            break;
+        }
+        
+        case APP_STATE_DELAY:
+        {
+            PLIB_PORTS_PinWrite(PORTS_ID_0, PORT_CHANNEL_G, PORTS_BIT_POS_14, 1);
+            if(appData.seconds == 59)
+            {
+                appData.seconds = 0;
+                appData.min = appData.min + 1;
+            }
+            else
+                appData.seconds = appData.seconds + 1;
+  
+            vTaskDelay(1000 / portTICK_PERIOD_MS);
+            appData.state = APP_STATE_PRINT;
             break;
         }
 
@@ -182,8 +196,60 @@ void APP_Tasks ( void )
         }
     }
 }
- 
+bool WriteStringTwo(void)
+{
+    if(appData.buffer[appData.stringIndex] == '\0')
+    {
+        appData.stringIndex = 0;
+        return true;
+    }
 
+    /* Write a character at a time, only if transmitter is empty */
+    while (PLIB_USART_TransmitterIsEmpty(USART_ID_1))
+    {
+        /* Send character */
+        PLIB_USART_TransmitterByteSend(USART_ID_1, appData.buffer[appData.stringIndex]);
+
+        /* Increment to address of next character */
+        appData.stringIndex++;
+
+        if(appData.buffer[appData.stringIndex] == '\0')
+        {
+            appData.stringIndex = 0;
+            return true;
+        }
+    }
+    return false;
+}
+
+bool WriteString(void)
+{
+    if(*appData.stringPointer == '\0')
+    {
+        return true;
+    }
+
+    /* Write a character at a time, only if transmitter is empty */
+    while (PLIB_USART_TransmitterIsEmpty(USART_ID_1))
+    {
+        /* Send character */
+        PLIB_USART_TransmitterByteSend(USART_ID_1, *appData.stringPointer);
+
+        /* Increment to address of next character */
+        appData.stringPointer++;
+
+        if(*appData.stringPointer == '\0')
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+void delay_some(volatile unsigned int delay)
+{
+    while(delay--);
+}
 /*******************************************************************************
  End of File
  */

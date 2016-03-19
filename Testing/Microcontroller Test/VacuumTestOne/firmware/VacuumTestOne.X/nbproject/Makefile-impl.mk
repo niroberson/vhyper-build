@@ -24,7 +24,7 @@ CLEAN_SUBPROJECTS=${CLEAN_SUBPROJECTS_${SUBPROJECTS}}
 
 
 # Project Name
-PROJECTNAME=HelloI2C_New.X
+PROJECTNAME=VacuumTestOne.X
 
 # Active Configuration
 DEFAULTCONF=default

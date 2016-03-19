@@ -61,6 +61,9 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include "system/debug/sys_debug.h"
 #include "BNO055.h"
 
+#define I2C_MODULE_MASTER           I2C_ID_2
+#define I2C_MODULE_SLAVE            I2C_ID_4
+
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
 
@@ -88,12 +91,52 @@ extern "C" {
 
 typedef enum
 {
-	/* Application's state machine's initial state. */
-	APP_STATE_INIT=0,
-    APP_STATE_RUN=1,
+    /* Application's state machine's initial state. */
+    APP_STATE_INIT=0,
+
+    APP_STATE_PRINT,
+
+    APP_STATE_RUN,
+            
+    APP_STATE_DELAY,
+
+	/* TODO: Define states used by the application state machine. */
 
 } APP_STATES;
 
+
+typedef enum
+{
+    /* Start condition on I2C BUS */
+    I2C_START=0,
+
+    /* Address byte was ACKed*/
+    I2C_ADDRESS_BYTE,
+
+    /* Data byte */
+    I2C_TX_RX_DATA_BYTE,
+
+    /* Setting Receive enable to accept byte from Slave */
+    I2C_RCEN_BYTE,
+
+    /* ACK/NACK Send to Slave */
+    I2C_ACK_NACK_BYTE,
+
+    /* Sending stop byte */
+    I2C_STOP_BYTE,
+
+} INTERRUPT_STATE;
+
+
+typedef enum
+{
+    /*Master is writing data to slave */
+    MASTER_WRITE,
+
+    /*Master is reading data from slave*/
+    MASTER_READ
+
+} MASTER_OPERATION;
 
 // *****************************************************************************
 /* Application Data
@@ -112,13 +155,16 @@ typedef struct
 {
     /* The application's current state */
     APP_STATES state;
-    char data;
-
-    /* TODO: Define any additional data used by the application. */
-
+    const char *stringPointer;
+    int stringIndex;
+    int seconds;
+    int min;
+    char buffer[55];
 
 } APP_DATA;
 
+
+volatile INTERRUPT_STATE interruptState;
 
 // *****************************************************************************
 // *****************************************************************************
@@ -168,7 +214,11 @@ typedef struct
 
 void APP_Initialize ( void );
 
+bool WriteString(void);
 
+bool WriteStringTwo(void);
+
+void delay_some(volatile unsigned int delay);
 /*******************************************************************************
   Function:
     void APP_Tasks ( void )
@@ -201,7 +251,6 @@ void APP_Initialize ( void );
 
 void APP_Tasks( void );
 
-bool PutCharacter(const char character);
 
 #endif /* _APP_H */
 

@@ -123,7 +123,15 @@ bool  begin(vhyper_bno055_opmode_t mode)
 {
     uint8_t id;
     // INSERT I2C read function here
-    //uint8_t id = read8(BNO055_CHIP_ID_ADDR);
+    if(true == DRV_I2C0_ByteWrite(BNO055_CHIP_ID_ADDR))
+    {
+        PLIB_PORTS_PinWrite(PORTS_ID_0, PORT_CHANNEL_G, PORTS_BIT_POS_15, 1);
+    }
+    else
+    {
+        PLIB_PORTS_PinWrite(PORTS_ID_0, PORT_CHANNEL_G, PORTS_BIT_POS_15, 0);
+    }
+    id = DRV_I2C0_ByteRead();
     if(id != BNO055_ID)
     {
         // DELAY Function
@@ -132,6 +140,10 @@ bool  begin(vhyper_bno055_opmode_t mode)
         if(id != BNO055_ID) {
             return false;  // still not? ok bail
         }
+    }
+    else
+    {
+        return true;
     }
 }
 

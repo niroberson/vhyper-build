@@ -54,6 +54,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include <stdbool.h>
 #include "system_config.h"
 #include "peripheral/i2c/plib_i2c.h"
+#include "peripheral/int/plib_int.h"
 #include "system/clk/sys_clk.h"
 #include "peripheral/ports/plib_ports.h"
 

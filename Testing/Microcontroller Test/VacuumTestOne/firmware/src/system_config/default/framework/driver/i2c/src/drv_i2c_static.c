@@ -62,6 +62,14 @@ void DRV_I2C0_Initialize(void)
     /* Low frequency is enabled (**NOTE** PLIB function logic reverted) */
     PLIB_I2C_HighFrequencyEnable(I2C_ID_1);
 
+    /* Initialize interrupts */
+    PLIB_INT_SourceFlagClear(INT_ID_0, INT_SOURCE_I2C_1_MASTER);
+    PLIB_INT_SourceEnable(INT_ID_0, INT_SOURCE_I2C_1_MASTER);
+    PLIB_INT_SourceFlagClear(INT_ID_0, INT_SOURCE_I2C_1_ERROR);
+    PLIB_INT_SourceEnable(INT_ID_0, INT_SOURCE_I2C_1_ERROR);
+    PLIB_INT_VectorPrioritySet(INT_ID_0, INT_VECTOR_I2C1, INT_PRIORITY_LEVEL1);
+    PLIB_INT_VectorSubPrioritySet(INT_ID_0, INT_VECTOR_I2C1, INT_SUBPRIORITY_LEVEL0);
+
     /* Enable I2C0 */
     PLIB_I2C_Enable(I2C_ID_1);
 }

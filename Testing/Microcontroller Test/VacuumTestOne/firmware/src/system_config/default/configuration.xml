@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <configuration version="1.0.7.9">
   <General>
-    <HarmonyPath path="../../../../../../microchip/harmony/v1_06_02"/>
+    <HarmonyPath path="../../../../../../../../microchip/harmony/v1_06_02"/>
     <ForceOptimization flag="true"/>
   </General>
   <Manifest>
@@ -157,7 +157,7 @@
       <Template>
         <Name>drv_i2c_static.c</Name>
         <Path>Source Files/app/system_config/default/framework/driver/i2c/src</Path>
-        <Checksum>86CDFB545845249C5B07D851F03ACF1D</Checksum>
+        <Checksum>11B5E4E9BD375234EE768A7CC8B70ACD</Checksum>
       </Template>
       <Template>
         <Name>main.c</Name>
@@ -166,12 +166,12 @@
       <Template>
         <Name>system_interrupt_a.S</Name>
         <Path>Source Files/app/system_config/default</Path>
-        <Checksum>F8E29721D7D91213A568F3DC060408EC</Checksum>
+        <Checksum>32B82B9C4B4D26BD5118A781614CAB78</Checksum>
       </Template>
       <Template>
         <Name>system_definitions.h</Name>
         <Path>Header Files/app/system_config/default</Path>
-        <Checksum>AEF8CDD788E81D81B74CB05A10A3A6C1</Checksum>
+        <Checksum>9B4DA69613A35148491F519C9B94D99E</Checksum>
       </Template>
       <Template>
         <Name>system_exceptions.c</Name>
@@ -195,7 +195,7 @@
       <Template>
         <Name>drv_i2c_static.h</Name>
         <Path>Header Files/app/system_config/default/framework/driver/i2c</Path>
-        <Checksum>BDDCED2F6306E40124682DAB41CC554F</Checksum>
+        <Checksum>D63F8BC55C92BABD83172563F9503EDB</Checksum>
       </Template>
       <Template>
         <Name>FreeRTOSConfig.h</Name>
@@ -224,7 +224,7 @@
       <Template>
         <Name>system_interrupt.c</Name>
         <Path>Source Files/app/system_config/default</Path>
-        <Checksum>9AC33B2960C8DF72C5EB0E3662303FF4</Checksum>
+        <Checksum>79597CFDB04B47F2428F7F2CD43BCFCD</Checksum>
       </Template>
       <Template>
         <Name>rtos_hooks.c</Name>
@@ -239,19 +239,19 @@
     </Templates>
     <CompilerItems>
       <C32-AS>
-        <Include value="../../../../../../../../microchip/harmony/v1_06_02/third_party/rtos/FreeRTOS/Source/portable/MPLAB/PIC32MX"/>
-        <Include value="../../../../../../../../microchip/harmony/v1_06_02/third_party/rtos/FreeRTOS/Source/include"/>
+        <Include value="../../../../../../../../../../microchip/harmony/v1_06_02/third_party/rtos/FreeRTOS/Source/portable/MPLAB/PIC32MX"/>
+        <Include value="../../../../../../../../../../microchip/harmony/v1_06_02/third_party/rtos/FreeRTOS/Source/include"/>
         <Include value="../src/system_config/default"/>
       </C32-AS>
       <C32>
-        <Include value="../../../../../../../../microchip/harmony/v1_06_02/third_party/rtos/FreeRTOS/Source/portable/MPLAB/PIC32MX"/>
-        <Include value="../../../../../../../../microchip/harmony/v1_06_02/third_party/rtos/FreeRTOS/Source/include"/>
+        <Include value="../../../../../../../../../../microchip/harmony/v1_06_02/third_party/rtos/FreeRTOS/Source/portable/MPLAB/PIC32MX"/>
+        <Include value="../../../../../../../../../../microchip/harmony/v1_06_02/third_party/rtos/FreeRTOS/Source/include"/>
         <Include value="../src/system_config/default"/>
         <Define value="__XC"/>
       </C32>
     </CompilerItems>
     <Libraries>
-      <Library value="../../../../../../../../microchip/harmony/v1_06_02/bin/framework/peripheral/PIC32MX795F512L_peripherals.a"/>
+      <Library value="../../../../../../../../../../microchip/harmony/v1_06_02/bin/framework/peripheral/PIC32MX795F512L_peripherals.a"/>
     </Libraries>
   </Manifest>
 </configuration>
