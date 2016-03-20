@@ -30,7 +30,7 @@ for i=1:1:end_time %total simulation time this loop helps format the data
     
     for x=1:1:3 %for loop used to average the data from each pin 3 times
         
-        for pin=1:1:5 %loop samples pin A0-A5, one time
+        for pin=1:1:5 %loop samples pin A1-A5, one time
             voltage(1,pin) = readVoltage(ard, strcat('A',int2str(pin)));
             rT(1,pin) = (voltage(1,pin)*r(pin))/(vcc-voltage(1,pin));
             k = r0*exp(-beta(pin)/t0); %constant for temperature calculation
